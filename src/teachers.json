@@ -2,11 +2,11 @@
   "teachers": [
     {
       "username": "mr.johnson",
-      "password": "teach123"
+      "password": "REPLACE_WITH_STRONG_RANDOM_PASSWORD"
     },
     {
       "username": "ms.lee",
-      "password": "classroom456"
+      "password": "REPLACE_WITH_STRONG_RANDOM_PASSWORD"
     }
   ]
 }

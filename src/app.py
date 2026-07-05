@@ -89,8 +89,11 @@ def load_teacher_credentials():
     if not teachers_file.exists():
         return {}
 
-    with open(teachers_file, "r", encoding="utf-8") as file:
-        teachers_data = json.load(file)
+    try:
+        with open(teachers_file, "r", encoding="utf-8") as file:
+            teachers_data = json.load(file)
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=500, detail="Teacher credentials file is invalid") from exc
 
     return {
         teacher["username"]: teacher["password"]
@@ -126,7 +129,8 @@ def get_activities():
 def teacher_login(username: str, password: str):
     """Authenticate teacher and return a session token."""
     teacher_credentials = load_teacher_credentials()
-    if teacher_credentials.get(username) != password:
+    stored_password = teacher_credentials.get(username)
+    if not stored_password or not secrets.compare_digest(stored_password, password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
 
     token = secrets.token_urlsafe(24)
